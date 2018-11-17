@@ -1,0 +1,5 @@
+---
+servers:
+  - name: server-1-nickname
+  - name: server-2-nickname
+    transient: yes

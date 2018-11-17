@@ -1,0 +1,23 @@
+---
+- hosts: "{{ selected_host}}"
+  become: true
+  become_user: postgres
+  tasks:
+    - file:
+        path: "{{ dump_filename }}"
+        state: absent
+
+    - postgresql_db:
+        name: "{{ database }}"
+        state: dump
+        target: "{{ dump_filename }}"
+        target_opts: "-Ox"
+
+    - fetch:
+        src: "{{ dump_filename }}"
+        dest: "{{ backup_dir }}"
+        flat: true
+
+    - file:
+        path: "{{ dump_filename }}"
+        state: absent

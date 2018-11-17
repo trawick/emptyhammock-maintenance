@@ -1,0 +1,30 @@
+---
+version: 1.0.0
+maintenance_apply_when: "crontab line"
+maintenance_reboot_when: "crontab line"
+certbot:
+    when: "crontab line"
+    command: "/path/to/command-that-handles-everything.sh"
+    not_due_output: "Cert not yet due for renewal"
+    renewed_output: "all renewals succeeded"
+check_python_package_versions:
+    when: "15 5,17 * * *"
+    list_command: "{{ script_dir }}/pip_freeze.sh"
+db_backup:
+    when: "crontab line"
+    database: MYDBNAME
+media_backup:
+    when: "crontab line"
+    path: /path/to/media/
+directory_backup:
+    when: "crontab line"
+    paths:
+        - /path/1/
+        - /path/2/
+        - /path/n/
+docker_volume_backup:
+    when: "crontab line"
+    volume_names:
+        - volume_1
+        - volume_2
+        - volume_n

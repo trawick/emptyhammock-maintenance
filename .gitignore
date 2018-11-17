@@ -1,0 +1,19 @@
+*.retry
+__pycache__/
+*.py[cod]
+
+.idea/
+
+# Environments
+env/
+
+maintenance-status.json
+.db_url
+
+*.retry
+
+# This file has your real Ansible inventory
+inventory
+
+# This file has your real list of servers
+servers.yml

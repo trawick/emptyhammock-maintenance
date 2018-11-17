@@ -1,0 +1,8 @@
+---
+- hosts: "{{ selected_host}}"
+  become: true
+  become_user: root
+  tasks:
+  - command: docker volume inspect {{ volume_name }}
+    register: inspection
+  - debug: var=inspection.stdout_lines
