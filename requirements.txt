@@ -21,7 +21,7 @@ click==6.7
 requests==2.20.1
   certifi==2017.11.5
   chardet==3.0.4
-  urllib3==1.22
+  urllib3==1.23
 git+git://github.com/trawick/emptyhammock-out-of-date.git@0.2.0
   six==1.11.0
 ipython==5.5.0
