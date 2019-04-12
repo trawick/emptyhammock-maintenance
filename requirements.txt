@@ -6,7 +6,7 @@ ansible==2.4.6
   enum34==1.1.6
   idna==2.6
   ipaddress==1.0.18
-  Jinja2==2.10
+  Jinja2==2.10.1
   MarkupSafe==1.0
   paramiko==2.4.2
   pyasn1==0.3.7
