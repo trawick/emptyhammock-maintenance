@@ -583,7 +583,7 @@ def perform_maintenance_tasks(
         task_classes, runner, dry_run, server, scratch_dir, backup_dir,
         rules_filename, config_dir
 ):
-    rules = yaml.load(open(rules_filename))
+    rules = yaml.load(open(rules_filename), Loader=yaml.FullLoader)
     logging.debug('Rules for %s: %r', server, rules)
 
     server_status = status[server]
@@ -684,7 +684,7 @@ def main(
 
     runner = Runner(logging, inventory_path, './playbooks')
 
-    servers = yaml.load(open(servers_path))['servers']
+    servers = yaml.load(open(servers_path), Loader=yaml.FullLoader)['servers']
     if server:
         servers = filter(lambda x: x['name'] == server, servers)
 
