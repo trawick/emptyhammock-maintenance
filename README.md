@@ -58,6 +58,11 @@ e-mail address for reports.
 Copy `servers.yml.sample` to `servers.yml` and `inventory.sample` to `inventory`
 and configure for your servers.
 
+### [`emptyhammock-out-of-date-django`](https://github.com/trawick/emptyhammock-out-of-date-django)
+
+If you have access to a server running this code, place the URL, including
+access key, in a file called `.db_url`.
+
 ## Setting up snapshots on maintenance server
 
 ### Installing zfs-auto-snapshot on Ubuntu versions prior to 17.04
