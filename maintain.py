@@ -74,7 +74,7 @@ class Runner(object):
         ]).decode('utf-8')
         self.logger.debug('Output from %s: %r', playbook, output)
         m = re.match(
-            r'^.*ok=(\d+) +changed=(\d+) +unreachable=(\d+) +failed=(\d+)\s+$',
+            r'^.*ok=(\d+)\s+changed=(\d+)\s+unreachable=(\d+)\s+failed=(\d+)\s+',
             output, re.MULTILINE | re.DOTALL
         )
         if not m:
@@ -116,11 +116,11 @@ class Runner(object):
             mod, mod_args, server, output
         )
 
-        m = re.match(r'^.* SUCCESS => (.*)$', output, re.MULTILINE | re.DOTALL)
+        m = re.match(r'^.* (?:SUCCESS|CHANGED) => (.*)$', output, re.MULTILINE | re.DOTALL)
         if m:
             return json.loads(m.group(1))
 
-        m = re.match(r'^.* SUCCESS \| rc=0 >>(.*)$', output, re.MULTILINE | re.DOTALL)
+        m = re.match(r'^.* CHANGED \| rc=0 >>(.*)$', output, re.MULTILINE | re.DOTALL)
         if m:
             return m.group(1)
 
