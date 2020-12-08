@@ -40,23 +40,24 @@ This has the following responsibilities:
 ## Setting up maintenance server
 
 ```bash
-$ sudo apt install aptitude virtualenv postfix python-dev
-$ virtualenv -p /usr/bin/python2.7 env
+$ sudo apt install aptitude postfix python3 python3-dev
+$ python3 -mvenv env
 $ . env/bin/activate
+$ pip install -U pip
 $ pip install -r requirements.txt
 ```
 
 Copy `maintenance-status.json` from another machine or initialize the file
 with contents `{}` (empty JSON dictionary).
 
+Copy `servers.yml.sample` to `servers.yml` and `inventory.sample` to `inventory`
+and configure for your servers.
+
 Create a `maintain.sh` script or similar that changes to the git checkout,
-activates the virtualenv, and runs `maintain.py`.
+activates the virtualenv, and runs `maintain.py`.  See `maintain.sh.sample`.
 
 Run the script at intervals from cron.  Configure cron to use a monitored
 e-mail address for reports.
-
-Copy `servers.yml.sample` to `servers.yml` and `inventory.sample` to `inventory`
-and configure for your servers.
 
 ### [`emptyhammock-out-of-date-django`](https://github.com/trawick/emptyhammock-out-of-date-django)
 

@@ -3,7 +3,7 @@ ansible==2.10.4
   asn1crypto==0.23.0
   bcrypt==3.1.4
   cffi==1.14.4
-  cryptography==2.3
+  cryptography==3.2.1
   enum34==1.1.6
   idna==2.6
   ipaddress==1.0.18
@@ -21,10 +21,10 @@ croniter==0.3.20
   python-dateutil==2.6.1
 pytz>=2017.3
 click==6.7
-requests==2.21.0
-  certifi==2019.3.9
+requests==2.25.0
+  certifi==2020.12.5
   chardet==3.0.4
-  urllib3==1.24.2
+  urllib3==1.26.2
 git+git://github.com/trawick/emptyhammock-out-of-date.git@0.2.0
   # six
 flake8==3.7.7
