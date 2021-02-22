@@ -1,6 +1,7 @@
 *.retry
 __pycache__/
 *.py[cod]
+.python-version
 
 .idea/
 
@@ -11,6 +12,9 @@ maintenance-status.json
 .db_url
 
 *.retry
+
+# This file has your script to invoke maintain.py within the virtualenv.
+maintain.sh
 
 # This file has your real Ansible inventory
 inventory
