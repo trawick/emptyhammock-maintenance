@@ -4,6 +4,7 @@ __pycache__/
 .python-version
 
 .idea/
+*~
 
 # Environments
 env/
