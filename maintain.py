@@ -528,7 +528,7 @@ class CheckOSMaintenanceTask(MaintenanceTask):
 
     def perform(self, runner, rules):
         command_line = 'apt list --upgradable 2>/dev/null'
-        result = runner.mod(self.server, 'command', command_line, become=True)
+        result = runner.mod(self.server, 'shell', command_line, become=True)
         if 'Listing...\n' not in result:
             logging.error(
                 'Output of "%s" on %s is not understood: %r',
