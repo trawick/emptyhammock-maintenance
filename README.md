@@ -90,3 +90,6 @@ directory of `maintain.py` or in a separate directory, to be named with the
     server is inactive.
 * From the maintenance bot id, ssh to the server once to verify and check
   the host key, if Ansible will use ssh for the connection.
+  ```
+  $ ansible -i ./inventory SERVERNAME -m ping
+  ```
