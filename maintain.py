@@ -579,6 +579,21 @@ class RebootTask(MaintenanceTask):
         self.was_performed()
 
 
+class CheckRebootTask(MaintenanceTask):
+    task_name = 'Check reboot'
+    nickname = 'check_reboot'
+    rule_key = 'check_reboot'
+    when_key = 'maintenance_check_reboot_when'
+
+    def perform(self, runner, rules):
+        filename = '/var/run/reboot-required'
+        command_line = f'ls -l {filename} 2>/dev/null || true'
+        result = runner.mod(self.server, 'shell', command_line)
+        if filename in result:
+            print(f'Server {self.server} needs to be rebooted.')
+        self.was_performed()
+
+
 def perform_maintenance_tasks(
         task_classes, runner, dry_run, server, scratch_dir, backup_dir,
         rules_filename, config_dir
