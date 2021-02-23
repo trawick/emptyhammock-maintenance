@@ -537,9 +537,9 @@ class CheckOSMaintenanceTask(MaintenanceTask):
             return
         threshold = int(rules['threshold'])
         lines = [
-            l
-            for l in result.split('\n')
-            if l not in (
+            line
+            for line in result.split('\n')
+            if line not in (
                 '',
                 'Listing...',
                 'WARNING: apt does not have a stable CLI interface. Use with caution in scripts.'
