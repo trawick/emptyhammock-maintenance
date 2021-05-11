@@ -23,7 +23,7 @@ requests==2.25.1
   idna==2.10
 git+git://github.com/trawick/emptyhammock-out-of-date.git@0.2.0
   # six
-flake8==3.9.1
+flake8==3.9.2
   mccabe==0.6.1
   pycodestyle==2.7.0
   pyflakes==2.3.1
