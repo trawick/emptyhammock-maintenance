@@ -19,7 +19,7 @@ click==7.1.2
 requests==2.25.1
   certifi==2020.12.5
   chardet==3.0.4
-  urllib3==1.26.4
+  urllib3==1.26.5
   idna==2.10
 git+https://github.com/trawick/emptyhammock-out-of-date.git@0.2.0
   # six
