@@ -39,6 +39,8 @@ This has the following responsibilities:
 
 ## Setting up maintenance server
 
+Python 3.6 or later is required.
+
 ```bash
 $ sudo apt install aptitude postfix python3 python3-dev
 $ python3 -mvenv env

@@ -528,7 +528,7 @@ class CheckOSMaintenanceTask(MaintenanceTask):
 
     def perform(self, runner, rules):
         command_line = 'apt list --upgradable 2>/dev/null'
-        result = runner.mod(self.server, 'command', command_line, become=True)
+        result = runner.mod(self.server, 'shell', command_line, become=True)
         if 'Listing...\n' not in result:
             logging.error(
                 'Output of "%s" on %s is not understood: %r',
@@ -537,9 +537,9 @@ class CheckOSMaintenanceTask(MaintenanceTask):
             return
         threshold = int(rules['threshold'])
         lines = [
-            l
-            for l in result.split('\n')
-            if l not in (
+            line
+            for line in result.split('\n')
+            if line not in (
                 '',
                 'Listing...',
                 'WARNING: apt does not have a stable CLI interface. Use with caution in scripts.'
@@ -576,6 +576,21 @@ class RebootTask(MaintenanceTask):
 
     def perform(self, runner, rules):
         runner.playbook(self.server, 'reboot-if-needed.yml')
+        self.was_performed()
+
+
+class CheckRebootTask(MaintenanceTask):
+    task_name = 'Check reboot'
+    nickname = 'check_reboot'
+    rule_key = 'check_reboot'
+    when_key = 'maintenance_check_reboot_when'
+
+    def perform(self, runner, rules):
+        filename = '/var/run/reboot-required'
+        command_line = f'ls -l {filename} 2>/dev/null || true'
+        result = runner.mod(self.server, 'shell', command_line)
+        if filename in result:
+            print(f'Server {self.server} needs to be rebooted.')
         self.was_performed()
 
 

@@ -28,3 +28,5 @@ docker_volume_backup:
         - volume_1
         - volume_2
         - volume_n
+check_reboot:
+    when: "0 12 * * *"
