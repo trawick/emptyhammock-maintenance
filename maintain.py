@@ -601,7 +601,15 @@ class RunCommandTask(MaintenanceTask):
     when_key = "run_custom_command_when"
 
     def perform(self, runner, rules):
-        runner.mod(self.server, "shell", rules["command"], become=True)
+        command = rules["command"]
+        # An exception will be logged by runner.mod() if the command exits with
+        # non-zero status.  Since this is run via the shell, we force the shell
+        # exit status to be zero so that we propagate the output of the command
+        # and avoid logging an exception.
+        result = runner.mod(self.server, "shell", command + "; exit 0", become=True)
+        result = result.strip()
+        if result:
+            print(f"Output of {command}:\n{result}")
         self.was_performed()
 
 
