@@ -594,6 +594,17 @@ class CheckRebootTask(MaintenanceTask):
         self.was_performed()
 
 
+class RunCommandTask(MaintenanceTask):
+    task_name = "Run custom command"
+    nickname = "run_custom_command"
+    rule_key = "run_custom_command"
+    when_key = "run_custom_command_when"
+
+    def perform(self, runner, rules):
+        runner.mod(self.server, "shell", rules["command"], become=True)
+        self.was_performed()
+
+
 def perform_maintenance_tasks(
         task_classes, runner, dry_run, server, scratch_dir, backup_dir,
         rules_filename, config_dir

@@ -30,3 +30,6 @@ docker_volume_backup:
         - volume_n
 check_reboot:
     when: "0 12 * * *"
+run_custom_command:
+    when: "crontab line"
+    command: "/path/to/command-to-run"
