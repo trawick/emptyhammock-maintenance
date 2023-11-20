@@ -609,7 +609,7 @@ class RunCommandTask(MaintenanceTask):
         result = runner.mod(self.server, "shell", command + "; exit 0", become=True)
         result = result.strip()
         if result:
-            print(f"Output of {command}:\n{result}")
+            print(f"Output of {command} on {self.server}:\n{result}")
         self.was_performed()
 
 
