@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-from __future__ import print_function
-
 from datetime import datetime, timedelta
 import json
 import logging
@@ -487,6 +485,7 @@ class VirtualenvTask(MaintenanceTask):
             list_command, src_file,
         )
         result = runner.mod(self.server, 'command', command_line, become=True)
+        # The list_command shouldn't produce any output other than newline.
         if re.match('^\n+$', result):
             ok = runner.fetch_file(
                 self.server, src_file, dest_file,
