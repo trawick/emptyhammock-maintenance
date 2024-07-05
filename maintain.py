@@ -563,7 +563,6 @@ class VirtualenvTask(MaintenanceTask):
                         rules.get("ignored_packages", []),
                     )
                     ok = self.run_pip_audit(edited_environment_file)
-                    ok = False  # XXX for testing
             else:
                 logging.error('Could not fetch file "%s" to "%s"', src_file, dest_file)
                 ok = False
