@@ -17,8 +17,10 @@ import requests
 import yaml
 
 from e_ood import (
-    Analyzer, AvailablePackageVersions, InstalledPackageVersions,
-    PackageVersionClassifications
+    Analyzer,
+    AvailablePackageVersions,
+    InstalledPackageVersions,
+    PackageVersionClassifications,
 )
 
 
@@ -30,7 +32,6 @@ class RunnerException(Exception):
 
 
 class Runner(object):
-
     def __init__(self, logger, inventory_path, playbooks_path):
         self.logger = logger
         self.inventory = inventory_path
@@ -43,11 +44,14 @@ class Runner(object):
         return output
 
     def get_hostname(self, server):
-        output = subprocess.check_output([
-            'ansible-inventory',
-            '-i', self.inventory,
-            '--list',
-        ]).decode('utf-8')
+        output = subprocess.check_output(
+            [
+                'ansible-inventory',
+                '-i',
+                self.inventory,
+                '--list',
+            ]
+        ).decode('utf-8')
         data = json.loads(output)
         return data[server]['hosts'][0]
 
@@ -64,32 +68,45 @@ class Runner(object):
             variables.append('-e')
             variables.append('%s=%s' % (k, v))
 
-        output = subprocess.check_output([
+        output = subprocess.check_output(
+            [
                 'ansible-playbook',
-                '-i', self.inventory,
-            ] + variables + [
-            playbook,
-        ]).decode('utf-8')
+                '-i',
+                self.inventory,
+            ]
+            + variables
+            + [
+                playbook,
+            ]
+        ).decode('utf-8')
         self.logger.debug('Output from %s: %r', playbook, output)
         m = re.match(
             r'^.*ok=(\d+)\s+changed=(\d+)\s+unreachable=(\d+)\s+failed=(\d+)\s+',
-            output, re.MULTILINE | re.DOTALL
+            output,
+            re.MULTILINE | re.DOTALL,
         )
         if not m:
             msg = 'Could not understand result of running playbook %s on %s: %r' % (
-                playbook, server, output
+                playbook,
+                server,
+                output,
             )
             self.logger.critical(msg)
             raise RunnerException(msg)
         ok, changed, unreachable, failed = map(int, m.groups())
         self.logger.debug(
             'Status of running playbook %s on %s: %s/%s/%s/%s',
-            playbook, server,
-            ok, changed, unreachable, failed
+            playbook,
+            server,
+            ok,
+            changed,
+            unreachable,
+            failed,
         )
         if unreachable or failed:
-            msg = 'Server was unreachable or a task failed, running playbook %s on %s: %r' % (
-                playbook, server, output
+            msg = (
+                'Server was unreachable or a task failed, running playbook %s on %s: %r'
+                % (playbook, server, output)
             )
             self.logger.critical(msg)
             raise RunnerException(msg)
@@ -98,9 +115,11 @@ class Runner(object):
     def mod(self, server, mod, mod_args=None, become=False):
         args = [
             'ansible',
-            '-i', self.inventory,
+            '-i',
+            self.inventory,
             server,
-            '-m', mod,
+            '-m',
+            mod,
         ]
         if mod_args is not None:
             args.append('-a')
@@ -110,11 +129,12 @@ class Runner(object):
 
         output = subprocess.check_output(args).decode('utf-8')
         self.logger.debug(
-            'Output of running %s(%s) on %s: %r',
-            mod, mod_args, server, output
+            'Output of running %s(%s) on %s: %r', mod, mod_args, server, output
         )
 
-        m = re.match(r'^.* (?:SUCCESS|CHANGED) => (.*)$', output, re.MULTILINE | re.DOTALL)
+        m = re.match(
+            r'^.* (?:SUCCESS|CHANGED) => (.*)$', output, re.MULTILINE | re.DOTALL
+        )
         if m:
             return json.loads(m.group(1))
 
@@ -123,19 +143,21 @@ class Runner(object):
             return m.group(1)
 
         msg = 'Could not understand result of running %s(%s) on %s: %r' % (
-            mod, mod_args, server, output
+            mod,
+            mod_args,
+            server,
+            output,
         )
         self.logger.critical(msg)
         raise RunnerException(msg)
 
     def fetch_file(self, server, src, dest):
-        result = self.mod(server, 'fetch', 'flat=yes src=%s dest=%s' % (
-            src, dest
-        ))
+        result = self.mod(server, 'fetch', 'flat=yes src=%s dest=%s' % (src, dest))
         if 'dest' not in result:
             logging.error(
                 'File %s does not exist for %s or cannot be accessed, skipping...',
-                src, server
+                src,
+                server,
             )
             try:
                 os.remove(dest)
@@ -169,7 +191,10 @@ def is_due(task_name, when, last_performed, now, window_size=None):
             logging.debug(
                 '%s cannot be run because window %s has been exceeded '
                 '(should have run %s ago at %s)',
-                task_name, window_size, delta, prev_run
+                task_name,
+                window_size,
+                delta,
+                prev_run,
             )
             perform = False
     return perform
@@ -179,9 +204,12 @@ class MaintenanceTask(object):
     """
     Abstract base class for some kind of server maintenance task.
     """
+
     _must_override = ('task_name', 'nickname', 'rule_key', 'when_key')
     task_name = None  # Printable/log-able name for the task; must override
-    nickname = None  # short name for user to identify specific task to run; must override
+    nickname = (
+        None  # short name for user to identify specific task to run; must override
+    )
     rule_key = None  # rule dictionary key for this task's rules; must override
     when_key = None  # status dictionary key for this task's status; must override
 
@@ -212,9 +240,9 @@ class MaintenanceTask(object):
         """
         for attr in self._must_override:
             if getattr(self, attr, None) is None:
-                raise NotImplementedError('Attribute "%s" must be set by %s' % (
-                    attr, type(self)
-                ))
+                raise NotImplementedError(
+                    'Attribute "%s" must be set by %s' % (attr, type(self))
+                )
 
         self.all_server_rules = rules
         self.server = server
@@ -265,8 +293,9 @@ class MaintenanceTask(object):
         return is_due(
             self.task_name,
             when,
-            status[self.server][self.when_key], now,
-            window_size=self.window_size
+            status[self.server][self.when_key],
+            now,
+            window_size=self.window_size,
         )
 
     def perform_if_needed(self, runner, dry_run, now):
@@ -333,10 +362,7 @@ def get_task_classes(nickname=None):
         for cls in subclasses(MaintenanceTask)
         if nickname is None or nickname == cls.nickname
     ]
-    return sorted(
-        matching_classes,
-        key=lambda c: c.order
-    )
+    return sorted(matching_classes, key=lambda c: c.order)
 
 
 class DatabaseBackupTask(MaintenanceTask):
@@ -349,11 +375,15 @@ class DatabaseBackupTask(MaintenanceTask):
         if not self.backup_dir.endswith('/'):
             self.backup_dir += '/'
         dump_name = '/tmp/%s.gz' % rules['database']
-        runner.playbook(self.server, 'dump_db_and_fetch.yml', {
-            'dump_filename': dump_name,
-            'database': rules['database'],
-            'backup_dir': self.backup_dir,
-        })
+        runner.playbook(
+            self.server,
+            'dump_db_and_fetch.yml',
+            {
+                'dump_filename': dump_name,
+                'database': rules['database'],
+                'backup_dir': self.backup_dir,
+            },
+        )
         self.was_performed()
 
 
@@ -363,7 +393,9 @@ class DirectoryBackupTask(MaintenanceTask):
     rule_key = 'directory_backup'
     when_key = 'directory_backup_when'
 
-    def backup_remote_path(self, runner, hostname, remote_path, local_dir=None, via_sudo=False):
+    def backup_remote_path(
+        self, runner, hostname, remote_path, local_dir=None, via_sudo=False
+    ):
         if not remote_path.endswith('/'):
             remote_path = remote_path + '/'
         if not local_dir:
@@ -373,15 +405,17 @@ class DirectoryBackupTask(MaintenanceTask):
             os.makedirs(local_path)
         local_path += '/'  # must end in slash
         extra_rsync_args = ['--rsync-path=sudo rsync'] if via_sudo else []
-        rsync = [
-            'rsync',
-            '-arvz',
-            '-delete',
-            '-e', 'ssh',
-        ] + extra_rsync_args + [
-            '%s:%s' % (hostname, remote_path),
-            local_path
-        ]
+        rsync = (
+            [
+                'rsync',
+                '-arvz',
+                '-delete',
+                '-e',
+                'ssh',
+            ]
+            + extra_rsync_args
+            + ['%s:%s' % (hostname, remote_path), local_path]
+        )
         runner.check_output(self.server, 'copying %s' % remote_path, rsync)
 
     def perform(self, runner, rules):
@@ -401,15 +435,18 @@ class DockerVolumeBackupTask(DirectoryBackupTask):
         ok = True
         hostname = runner.get_hostname(self.server)
         for volume_name in rules['volume_names']:
-            output = runner.playbook(self.server, 'inspect_docker_volume.yml', {
-                'volume_name': volume_name,
-            })
+            output = runner.playbook(
+                self.server,
+                'inspect_docker_volume.yml',
+                {
+                    'volume_name': volume_name,
+                },
+            )
             m = re.search(r'\\"Mountpoint\\": \\"([^"]+)\\"', output)
             if m:
                 mount_point = m.group(1)
                 self.backup_remote_path(
-                    runner, hostname, mount_point, local_dir=volume_name,
-                    via_sudo=True
+                    runner, hostname, mount_point, local_dir=volume_name, via_sudo=True
                 )
             else:
                 logging.error(
@@ -435,8 +472,7 @@ class CertbotRefreshTask(MaintenanceTask):
             logging.info('Certificate was renewed')
         else:
             logging.error(
-                'Output of certbot on %s is not understood: %r',
-                self.server, result
+                'Output of certbot on %s is not understood: %r', self.server, result
             )
             ok = False
         if ok:
@@ -470,9 +506,12 @@ class VirtualenvTask(MaintenanceTask):
             return
         db_filename = os.path.join(config_dir, 'db.yaml')
 
-        rv = requests.get(open('.db_url').read().strip('\n'), headers={
-            'User-Agent': cls.USER_AGENT,
-        })
+        rv = requests.get(
+            open('.db_url').read().strip('\n'),
+            headers={
+                'User-Agent': cls.USER_AGENT,
+            },
+        )
         assert rv.status_code == 200
         with open(db_filename, 'w') as f:
             f.write(rv.text)
@@ -482,13 +521,16 @@ class VirtualenvTask(MaintenanceTask):
         src_file = '/tmp/python-packages.txt'
         dest_file = os.path.join(self.config_dir, 'python-packages.txt')
         command_line = '{} {}'.format(
-            list_command, src_file,
+            list_command,
+            src_file,
         )
         result = runner.mod(self.server, 'command', command_line, become=True)
         # The list_command shouldn't produce any output other than newline.
         if re.match('^\n+$', result):
             ok = runner.fetch_file(
-                self.server, src_file, dest_file,
+                self.server,
+                src_file,
+                dest_file,
             )
             if ok:
                 env_packages = InstalledPackageVersions.from_freeze_file(dest_file)
@@ -500,9 +542,7 @@ class VirtualenvTask(MaintenanceTask):
                     max_cache_time_seconds=self.PYPI_CACHE_SECONDS
                 ) as version_info:
                     analyzer = Analyzer(env_packages, version_info, version_db)
-                    result = analyzer.analyze(
-                        ignored_packages=self.IGNORED
-                    )
+                    result = analyzer.analyze(ignored_packages=self.IGNORED)
                 output = result.render()
                 if output:
                     print('Out of date packages for %s:' % self.server)
@@ -512,7 +552,9 @@ class VirtualenvTask(MaintenanceTask):
         else:
             logging.error(
                 'Output of %s on %s is not understood: %r',
-                list_command, self.server, result
+                list_command,
+                self.server,
+                result,
             )
             ok = False
         if ok:
@@ -531,17 +573,20 @@ class CheckOSMaintenanceTask(MaintenanceTask):
         if 'Listing...\n' not in result:
             logging.error(
                 'Output of "%s" on %s is not understood: %r',
-                command_line, self.server, result
+                command_line,
+                self.server,
+                result,
             )
             return
         threshold = int(rules['threshold'])
         lines = [
             line
             for line in result.split('\n')
-            if line not in (
+            if line
+            not in (
                 '',
                 'Listing...',
-                'WARNING: apt does not have a stable CLI interface. Use with caution in scripts.'
+                'WARNING: apt does not have a stable CLI interface. Use with caution in scripts.',
             )
         ]
         if len(lines) > threshold:
@@ -613,8 +658,14 @@ class RunCommandTask(MaintenanceTask):
 
 
 def perform_maintenance_tasks(
-        task_classes, runner, dry_run, server, scratch_dir, backup_dir,
-        rules_filename, config_dir
+    task_classes,
+    runner,
+    dry_run,
+    server,
+    scratch_dir,
+    backup_dir,
+    rules_filename,
+    config_dir,
 ):
     rules = yaml.load(open(rules_filename), Loader=yaml.FullLoader)
     logging.debug('Rules for %s: %r', server, rules)
@@ -630,7 +681,9 @@ def perform_maintenance_tasks(
         task.perform_if_needed(runner, dry_run, now)
 
 
-def maintain_server(task_classes, runner, scratch_dir, backup_dir, config_dir, dry_run, server):
+def maintain_server(
+    task_classes, runner, scratch_dir, backup_dir, config_dir, dry_run, server
+):
     logging.info('Processing %s', server)
     config_yml = os.path.join(config_dir, 'config.yml')
     try:
@@ -651,15 +704,25 @@ def maintain_server(task_classes, runner, scratch_dir, backup_dir, config_dir, d
             return
 
     perform_maintenance_tasks(
-        task_classes, runner, dry_run, server, scratch_dir, backup_dir,
-        config_yml, config_dir
+        task_classes,
+        runner,
+        dry_run,
+        server,
+        scratch_dir,
+        backup_dir,
+        config_yml,
+        config_dir,
     )
 
 
 @click.command()
-@click.argument('backup-dir', type=click.Path(exists=True, file_okay=False, writable=True))
+@click.argument(
+    'backup-dir', type=click.Path(exists=True, file_okay=False, writable=True)
+)
 @click.argument('log-dir', type=click.Path(exists=True, file_okay=False, writable=True))
-@click.argument('config-cache-dir', type=click.Path(exists=True, file_okay=False, writable=True))
+@click.argument(
+    'config-cache-dir', type=click.Path(exists=True, file_okay=False, writable=True)
+)
 @click.option('--dry-run', is_flag=True)
 @click.option('--debug', is_flag=True, help='Enable debug logging to console')
 @click.option('--server', help='Perform maintenance only for this server')
@@ -675,15 +738,13 @@ def main(
     debug,
     server=None,
     task=None,
-    configuration=None
+    configuration=None,
 ):
     log_config = {
         'version': 1,
         'disable_existing_loggers': False,
         'formatters': {
-            'detailed':  {
-                'format': '%(asctime)s %(levelname)-8s %(message)s'
-            },
+            'detailed': {'format': '%(asctime)s %(levelname)-8s %(message)s'},
         },
         'handlers': {
             'console': {
@@ -698,7 +759,7 @@ def main(
                 'mode': 'a',
                 'maxBytes': 10 * 1024 * 1024,
                 'backupCount': 10,
-            }
+            },
         },
         'root': {
             'handlers': ['console', 'file'],
@@ -742,8 +803,12 @@ def main(
             try:
                 maintain_server(
                     task_classes,
-                    runner, scratch_dir, os.path.join(backup_dir, server),
-                    os.path.join(config_cache_dir, server), dry_run, server
+                    runner,
+                    scratch_dir,
+                    os.path.join(backup_dir, server),
+                    os.path.join(config_cache_dir, server),
+                    dry_run,
+                    server,
                 )
             except Exception:  # noqa
                 logging.exception('Bad stuff happened maintaining server %s', server)
