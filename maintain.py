@@ -489,17 +489,6 @@ class VirtualenvTask(MaintenanceTask):
     rule_key = 'check_python_package_versions'
     when_key = 'check_python_packages_when'
 
-    IGNORED = (
-        'emptyhammock-article',
-        'emptyhammock-contact',
-        'emptyhammock-out-of-date-django',
-        'emptyhammock-simple-plugins',
-        'emptyhammock-time',
-        'html5lib',
-        'pkg-resources',
-        'stacktraces',
-    )
-
     USER_AGENT = 'emptyhammock-maintenance'
 
     PYPI_CACHE_SECONDS = 60 * 60 * 6
@@ -521,6 +510,7 @@ class VirtualenvTask(MaintenanceTask):
             f.write(rv.text)
 
     def perform(self, runner, rules):
+        ignored_packages = rules.get("ignored_packages", ["pkg-resources"])
         list_command = rules['list_command']
         src_file = '/tmp/python-packages.txt'
         dest_file = os.path.join(self.config_dir, 'python-packages.txt')
@@ -546,7 +536,7 @@ class VirtualenvTask(MaintenanceTask):
                     max_cache_time_seconds=self.PYPI_CACHE_SECONDS
                 ) as version_info:
                     analyzer = Analyzer(env_packages, version_info, version_db)
-                    result = analyzer.analyze(ignored_packages=self.IGNORED)
+                    result = analyzer.analyze(ignored_packages=ignored_packages)
                 output = result.render()
                 if output:
                     print('Out of date packages for %s:' % self.server)
@@ -560,7 +550,7 @@ class VirtualenvTask(MaintenanceTask):
                     self.ignore_requirements(
                         dest_file,
                         edited_environment_file,
-                        rules.get("ignored_packages", []),
+                        ignored_packages,
                     )
                     ok = self.run_pip_audit(edited_environment_file)
             else:
@@ -577,8 +567,8 @@ class VirtualenvTask(MaintenanceTask):
         if ok:
             self.was_performed()
 
+    @staticmethod
     def ignore_requirements(
-        self,
         original_requirements: str,
         edited_requirements: str,
         ignored_packages: List[str],
@@ -617,7 +607,7 @@ class VirtualenvTask(MaintenanceTask):
                 edited_environment_file,
             ],
             capture_output=True,
-            encoding="utf-8"
+            encoding="utf-8",
         )
 
         if result.returncode:
