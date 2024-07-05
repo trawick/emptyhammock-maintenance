@@ -570,7 +570,7 @@ class VirtualenvTask(MaintenanceTask):
     @staticmethod
     def ignore_requirements(
         original_requirements: str,
-        edited_requirements: str,
+        edited_requirements: Path,
         ignored_packages: List[str],
     ):
         original_packages = open(original_requirements, encoding="utf-8").readlines()
@@ -582,11 +582,11 @@ class VirtualenvTask(MaintenanceTask):
                 if m:
                     package_name = m.group(1)
                     if package_name not in ignored_packages:
-                        print(m.group(1), file=edited_requirements_file)
+                        print(package_spec, end="", file=edited_requirements_file)
                 else:
                     print(f"Cannot understand {package_spec}")
 
-    def run_pip_audit(self, requirements_file: str):
+    def run_pip_audit(self, requirements_file: Path):
         edited_environment_file = requirements_file
         pip_audit_virtualenv = Path(self.scratch_dir) / "tmp_pip_audit_env"
         create(pip_audit_virtualenv, with_pip=True)
