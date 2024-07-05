@@ -10,6 +10,7 @@ certbot:
 check_python_package_versions:
     when: "15 5,17 * * *"
     list_command: "{{ script_dir }}/pip_freeze.sh"
+    run_pipaudit: true
 db_backup:
     when: "crontab line"
     database: MYDBNAME

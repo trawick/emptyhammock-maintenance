@@ -8,6 +8,7 @@ __pycache__/
 
 # Environments
 env/
+venv/
 
 maintenance-status.json
 .db_url

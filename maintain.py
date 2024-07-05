@@ -9,6 +9,10 @@ import shutil
 import subprocess
 import tempfile
 import time
+from pathlib import Path
+from typing import List
+
+from venv import create
 
 import click
 from croniter import croniter
@@ -549,6 +553,20 @@ class VirtualenvTask(MaintenanceTask):
                     print()
                     print(output)
                     logging.info('Out of date packages: %s', output)
+                if rules.get("run_pipaudit", False):
+                    edited_environment_file = (
+                        Path(self.scratch_dir) / "edited_requirements.txt"
+                    )
+                    self.ignore_requirements(
+                        dest_file,
+                        edited_environment_file,
+                        rules.get("ignored_packages", []),
+                    )
+                    ok = self.run_pip_audit(edited_environment_file)
+                    ok = False  # XXX for testing
+            else:
+                logging.error('Could not fetch file "%s" to "%s"', src_file, dest_file)
+                ok = False
         else:
             logging.error(
                 'Output of %s on %s is not understood: %r',
@@ -559,6 +577,67 @@ class VirtualenvTask(MaintenanceTask):
             ok = False
         if ok:
             self.was_performed()
+
+    def ignore_requirements(
+        self,
+        original_requirements: str,
+        edited_requirements: str,
+        ignored_packages: List[str],
+    ):
+        original_packages = open(original_requirements, encoding="utf-8").readlines()
+        with open(
+            edited_requirements, "w", encoding="utf-8"
+        ) as edited_requirements_file:
+            for package_spec in original_packages:
+                m = re.match(r"^([^= ]+)(=| ).*", package_spec)
+                if m:
+                    package_name = m.group(1)
+                    if package_name not in ignored_packages:
+                        print(m.group(1), file=edited_requirements_file)
+                else:
+                    print(f"Cannot understand {package_spec}")
+
+    def run_pip_audit(self, requirements_file: str):
+        edited_environment_file = requirements_file
+        pip_audit_virtualenv = Path(self.scratch_dir) / "tmp_pip_audit_env"
+        create(pip_audit_virtualenv, with_pip=True)
+        subprocess.run(
+            [
+                pip_audit_virtualenv / "bin" / "pip",
+                "install",
+                "pip-audit",
+            ],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True,
+        )
+        result = subprocess.run(
+            [
+                pip_audit_virtualenv / "bin" / "pip-audit",
+                "--requirement",
+                edited_environment_file,
+            ],
+            capture_output=True,
+            encoding="utf-8"
+        )
+
+        if result.returncode:
+            print(f"pip-audit failed with return code {result.returncode}")
+        trimmed_stdout = result.stdout.strip()
+        trimmed_stderr = result.stderr.strip()
+        if trimmed_stderr == "No known vulnerabilities found":
+            print(f"pip-audit: {trimmed_stderr}")
+        else:
+            print("Output of pip-audit:")
+            print("stdout")
+            print(trimmed_stdout)
+            print("stderr")
+            print(trimmed_stderr)
+
+        # As long as we got this far, it ran ok.  pip-audit exits with non-zero
+        # if it finds a vulnerability.  That doesn't mean we should keep running
+        # this task over and over, so return True.
+        return True
 
 
 class CheckOSMaintenanceTask(MaintenanceTask):
