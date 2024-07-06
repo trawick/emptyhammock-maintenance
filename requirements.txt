@@ -1,16 +1,16 @@
-ansible==7.0.0
-  ansible-core==2.14.17
+ansible==7.7.0
+  ansible-core==2.14.7
     cryptography==42.0.8
-      cffi==1.14.5
-        pycparser==2.20
+      cffi==1.16.0
+        pycparser==2.22
     Jinja2==3.1.4
       MarkupSafe==2.0
     packaging==24.1
       pyparsing==3.1.2
-    PyYAML==5.4.1
+    PyYAML==6.0.1
     resolvelib==0.8.1
-croniter==1.0.13
-  python-dateutil==2.8.1
+croniter==1.4.1
+  python-dateutil==2.9.0
     six==1.16.0
   future==1.0.0
   natsort==8.4.0
