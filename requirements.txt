@@ -1,5 +1,6 @@
-ansible==7.7.0
-  ansible-core==2.14.7
+# 9.7.x/2.16.x are the latest versions to support Python 3.6 on the target machine.
+ansible==9.7.0
+  ansible-core==2.16.8
     cryptography==42.0.8
       cffi==1.16.0
         pycparser==2.22
