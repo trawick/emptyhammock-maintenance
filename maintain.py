@@ -615,14 +615,16 @@ class VirtualenvTask(MaintenanceTask):
             print(f"pip-audit failed with return code {result.returncode}")
         trimmed_stdout = result.stdout.strip()
         trimmed_stderr = result.stderr.strip()
+        all_output = trimmed_stdout + trimmed_stderr
+        logging.info("pip-audit rc %s output: %s", result.returncode, all_output)
+
         if trimmed_stderr == "No known vulnerabilities found":
             print(f"pip-audit: {trimmed_stderr}")
         else:
             print("Output of pip-audit:")
-            print("stdout")
-            print(trimmed_stdout)
-            print("stderr")
-            print(trimmed_stderr)
+            print(all_output)
+
+        print()
 
         # As long as we got this far, it ran ok.  pip-audit exits with non-zero
         # if it finds a vulnerability.  That doesn't mean we should keep running
