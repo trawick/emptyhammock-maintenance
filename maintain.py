@@ -20,11 +20,12 @@ import pytz
 import requests
 import yaml
 
-from e_ood import (
+from e_out_of_date import (
     Analyzer,
     AvailablePackageVersions,
     InstalledPackageVersions,
     PackageVersionClassifications,
+    ignore_pkg_resources_warnings,
 )
 
 
@@ -537,7 +538,7 @@ class VirtualenvTask(MaintenanceTask):
                 ) as version_info:
                     analyzer = Analyzer(env_packages, version_info, version_db)
                     result = analyzer.analyze(ignored_packages=ignored_packages)
-                output = result.render()
+                output = result.render(max_newer_versions=20)
                 if output:
                     print('Out of date packages for %s:' % self.server)
                     print()
@@ -835,6 +836,7 @@ def main(
         },
     }
     dictConfig(log_config)
+    ignore_pkg_resources_warnings()
 
     task_classes = get_task_classes(task)
     for task_class in task_classes:

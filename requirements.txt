@@ -22,7 +22,7 @@ requests==2.32.3
   chardet==3.0.4
   urllib3==1.26.19
   idna==3.7
-git+https://github.com/trawick/emptyhammock-out-of-date.git@0.2.0
+git+https://github.com/trawick/emptyhammock-out-of-date.git@0.2.1
   # six
 flake8==7.1.0
   mccabe==0.7.0
