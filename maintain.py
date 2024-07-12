@@ -612,16 +612,15 @@ class VirtualenvTask(MaintenanceTask):
         )
 
         if result.returncode:
-            print(f"pip-audit failed with return code {result.returncode}")
+            print(f"pip-audit for {self.server} failed:")
         trimmed_stdout = result.stdout.strip()
         trimmed_stderr = result.stderr.strip()
-        all_output = trimmed_stdout + trimmed_stderr
+        all_output = trimmed_stdout + "\n\n" + trimmed_stderr
         logging.info("pip-audit rc %s output: %s", result.returncode, all_output)
 
         if trimmed_stderr == "No known vulnerabilities found":
-            print(f"pip-audit: {trimmed_stderr}")
+            print(f"pip-audit for {self.server}: {trimmed_stderr}")
         else:
-            print("Output of pip-audit:")
             print(all_output)
 
         print()
