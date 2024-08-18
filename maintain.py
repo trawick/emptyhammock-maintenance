@@ -613,6 +613,7 @@ class VirtualenvTask(MaintenanceTask):
 
         if result.returncode:
             print(f"pip-audit for {self.server} failed:")
+            print("\n")
         trimmed_stdout = result.stdout.strip()
         trimmed_stderr = result.stderr.strip()
         all_output = trimmed_stdout + "\n\n" + trimmed_stderr
