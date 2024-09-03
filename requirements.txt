@@ -1,16 +1,15 @@
-# 9.7.x/2.16.x are the latest versions to support Python 3.6 on the target machine.
-ansible==9.7.0
-  ansible-core==2.16.8
-    cryptography==42.0.8
-      cffi==1.16.0
+ansible==9.8.0
+  ansible-core==2.16.9
+    cryptography==43.0.0
+      cffi==1.17.0
         pycparser==2.22
     Jinja2==3.1.4
-      MarkupSafe==2.0
+      MarkupSafe==2.1.5
     packaging==24.1
-      pyparsing==3.1.2
-    PyYAML==6.0.1
-    resolvelib==0.8.1
-croniter==1.4.1
+      pyparsing==3.1.4
+    PyYAML==6.0.2
+    resolvelib==1.0.1
+croniter==2.0.7
   python-dateutil==2.9.0
     six==1.16.0
   future==1.0.0
@@ -18,18 +17,18 @@ croniter==1.4.1
 pytz==2024.1
 click==8.1.7
 requests==2.32.3
-  certifi==2024.7.4
-  chardet==3.0.4
-  urllib3==1.26.19
-  idna==3.7
+  certifi==2024.8.30
+  chardet==4.0.0
+  urllib3==1.26.20
+  idna==3.8
 git+https://github.com/trawick/emptyhammock-out-of-date.git@0.2.1
   # six
-flake8==7.1.0
+flake8==7.1.1
   mccabe==0.7.0
-  pycodestyle==2.12.0
+  pycodestyle==2.12.1
   pyflakes==3.2.0
-  configparser==7.0.0
+  configparser==7.1.0
   entrypoints==0.4
   importlib-metadata==8.0.0
-    zipp==3.19.2
+    zipp==3.20.1
     typing-extensions==4.12.2
