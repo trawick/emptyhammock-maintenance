@@ -1,6 +1,6 @@
-ansible==9.8.0
-  ansible-core==2.16.9
-    cryptography==43.0.0
+ansible==9.9.0
+  ansible-core==2.16.10
+    cryptography==43.0.1
       cffi==1.17.0
         pycparser==2.22
     Jinja2==3.1.4
