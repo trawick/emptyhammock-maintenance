@@ -3,7 +3,7 @@ ansible==10.1.0
     cryptography==43.0.3
       cffi==1.17.1
         pycparser==2.22
-    Jinja2==3.1.4
+    Jinja2==3.1.5
       MarkupSafe==2.1.5
     packaging==24.2
       pyparsing==3.1.4
@@ -16,11 +16,11 @@ croniter==3.0.4
   future==1.0.0
   natsort==8.4.0
 pytz==2024.2
-click==8.1.7
+click==8.1.8
 requests==2.32.3
-  certifi==2024.8.30
+  certifi==2024.12.14
   chardet==5.2.0
-  urllib3==2.2.3
+  urllib3==2.3.0
   idna==3.10
 git+https://github.com/trawick/emptyhammock-out-of-date.git@0.2.1
   # six
