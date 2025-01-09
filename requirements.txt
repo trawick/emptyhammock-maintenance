@@ -1,16 +1,16 @@
-ansible==10.1.0
+ansible==10.7.0
   ansible-core==2.17.7
-    cryptography==43.0.3
+    cryptography==44.0.0
       cffi==1.17.1
         pycparser==2.22
     Jinja2==3.1.5
-      MarkupSafe==2.1.5
+      MarkupSafe==3.0.2
     packaging==24.2
-      pyparsing==3.1.4
+      pyparsing==3.2.1
     PyYAML==6.0.2
     # ansible-core 2.17.7 doesn't work with resolvelib 1.1.0
     resolvelib==1.0.1
-croniter==3.0.4
+croniter==6.0.0
   python-dateutil==2.9.0
     six==1.17.0
   future==1.0.0
@@ -19,7 +19,7 @@ pytz==2024.2
 click==8.1.8
 requests==2.32.3
   certifi==2024.12.14
-  chardet==5.2.0
+  charset-normalizer==3.4.1
   urllib3==2.3.0
   idna==3.10
 git+https://github.com/trawick/emptyhammock-out-of-date.git@0.2.1
