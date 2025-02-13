@@ -1,6 +1,6 @@
 ansible==10.7.0
   ansible-core==2.17.7
-    cryptography==44.0.0
+    cryptography==44.0.1
       cffi==1.17.1
         pycparser==2.22
     Jinja2==3.1.5
@@ -15,10 +15,10 @@ croniter==6.0.0
     six==1.17.0
   future==1.0.0
   natsort==8.4.0
-pytz==2024.2
+pytz==2025.1
 click==8.1.8
 requests==2.32.3
-  certifi==2024.12.14
+  certifi==2025.1.31
   charset-normalizer==3.4.1
   urllib3==2.3.0
   idna==3.10
@@ -30,6 +30,6 @@ flake8==7.1.1
   pyflakes==3.2.0
   configparser==7.1.0
   entrypoints==0.4
-  importlib-metadata==8.5.0
+  importlib-metadata==8.6.1
     zipp==3.21.0
     typing-extensions==4.12.2
