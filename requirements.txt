@@ -1,11 +1,11 @@
 ansible==10.7.0
   ansible-core==2.17.7
-    cryptography==44.0.2
+    cryptography==45.0.4
       cffi==1.17.1
         pycparser==2.22
     Jinja2==3.1.6
       MarkupSafe==3.0.2
-    packaging==24.2
+    packaging==25.0
       pyparsing==3.2.3
     PyYAML==6.0.2
     # ansible-core 2.17.7 doesn't work with resolvelib 1.1.0
@@ -16,11 +16,11 @@ croniter==6.0.0
   future==1.0.0
   natsort==8.4.0
 pytz==2025.2
-click==8.1.8
-requests==2.32.3
-  certifi==2025.1.31
-  charset-normalizer==3.4.1
-  urllib3==2.3.0
+click==8.2.1
+requests==2.32.4
+  certifi==2025.4.26
+  charset-normalizer==3.4.2
+  urllib3==2.4.0
   idna==3.10
 git+https://github.com/trawick/emptyhammock-out-of-date.git@0.2.1
   # six
@@ -30,6 +30,6 @@ flake8==7.2.0
   pyflakes==3.3.2
   configparser==7.2.0
   entrypoints==0.4
-  importlib-metadata==8.6.1
-    zipp==3.21.0
-    typing-extensions==4.13.0
+  importlib-metadata==8.7.0
+    zipp==3.23.0
+    typing-extensions==4.14.0
