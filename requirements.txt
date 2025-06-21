@@ -18,16 +18,16 @@ croniter==6.0.0
 pytz==2025.2
 click==8.2.1
 requests==2.32.4
-  certifi==2025.4.26
+  certifi==2025.6.15
   charset-normalizer==3.4.2
-  urllib3==2.4.0
+  urllib3==2.5.0
   idna==3.10
 git+https://github.com/trawick/emptyhammock-out-of-date.git@0.2.1
   # six
-flake8==7.2.0
+flake8==7.3.0
   mccabe==0.7.0
-  pycodestyle==2.13.0
-  pyflakes==3.3.2
+  pycodestyle==2.14.0
+  pyflakes==3.4.0
   configparser==7.2.0
   entrypoints==0.4
   importlib-metadata==8.7.0
