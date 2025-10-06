@@ -13,7 +13,6 @@ ansible==10.7.0
 croniter==6.0.0
   python-dateutil==2.9.0
     six==1.17.0
-  future==1.0.0
   natsort==8.4.0
 pytz==2025.2
 click==8.2.1
