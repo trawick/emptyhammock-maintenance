@@ -25,7 +25,6 @@ from e_out_of_date import (
     AvailablePackageVersions,
     InstalledPackageVersions,
     PackageVersionClassifications,
-    ignore_pkg_resources_warnings,
 )
 
 
@@ -838,7 +837,6 @@ def main(
         },
     }
     dictConfig(log_config)
-    ignore_pkg_resources_warnings()
 
     task_classes = get_task_classes(task)
     for task_class in task_classes:
