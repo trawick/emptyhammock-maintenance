@@ -22,7 +22,7 @@ requests==2.32.4
   charset-normalizer==3.4.2
   urllib3==2.5.0
   idna==3.10
-git+https://github.com/trawick/emptyhammock-out-of-date.git@0.2.1
+git+https://github.com/trawick/emptyhammock-out-of-date.git@0.3.0
   # six
 flake8==7.3.0
   mccabe==0.7.0
