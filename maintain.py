@@ -10,7 +10,6 @@ import subprocess
 import tempfile
 import time
 from pathlib import Path
-from typing import List
 
 from venv import create
 
@@ -26,6 +25,8 @@ from e_out_of_date import (
     InstalledPackageVersions,
     PackageVersionClassifications,
 )
+
+from utils import ignore_requirements
 
 
 MAX_CACHED_CONFIG_AGE_SECS = 4 * 60 * 60
@@ -547,11 +548,18 @@ class VirtualenvTask(MaintenanceTask):
                     edited_environment_file = (
                         Path(self.scratch_dir) / "edited_requirements.txt"
                     )
-                    self.ignore_requirements(
+                    all_packages, warnings = ignore_requirements(
                         dest_file,
                         edited_environment_file,
                         ignored_packages,
                     )
+                    if warnings:
+                        for warning in warnings:
+                            print(warning)
+                        print()
+                        print('all packages:')
+                        for package_name in all_packages:
+                            print(package_name)
                     ok = self.run_pip_audit(edited_environment_file)
             else:
                 logging.error('Could not fetch file "%s" to "%s"', src_file, dest_file)
@@ -566,38 +574,6 @@ class VirtualenvTask(MaintenanceTask):
             ok = False
         if ok:
             self.was_performed()
-
-    @staticmethod
-    def ignore_requirements(
-        original_requirements: str,
-        edited_requirements: Path,
-        ignored_packages: List[str],
-    ):
-        original_packages = open(original_requirements, encoding="utf-8").readlines()
-        successfully_ignored = set()
-        with open(
-            edited_requirements, "w", encoding="utf-8"
-        ) as edited_requirements_file:
-            for package_spec in original_packages:
-                m = re.match(r"^([^= ]+)([= ]).*", package_spec)
-                if m:
-                    package_name = m.group(1)
-                    if package_name in ignored_packages:
-                        successfully_ignored.add(package_name)
-                    else:
-                        print(package_spec, end="", file=edited_requirements_file)
-                else:
-                    print(f"Cannot understand {package_spec}")
-
-        # Display any ignored packages which weren't found.
-        ignored_packages_set = set(ignored_packages)
-        if successfully_ignored != ignored_packages_set:
-            print(
-                "should ignore for pip-audit, but not present:",
-                ignored_packages_set - successfully_ignored
-            )
-            print("original packages:", original_packages)
-            print()
 
     def run_pip_audit(self, requirements_file: Path):
         edited_environment_file = requirements_file
