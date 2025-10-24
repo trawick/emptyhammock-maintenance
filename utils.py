@@ -25,7 +25,7 @@ def ignore_requirements(
                 if package_name in ignored_packages:
                     successfully_ignored.add(package_name)
                 else:
-                    print(package_spec, end="", file=edited_requirements_file)
+                    print(package_spec, file=edited_requirements_file)
             else:
                 warnings.append(f"Cannot understand {package_spec}")
 
