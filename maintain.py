@@ -511,7 +511,7 @@ class VirtualenvTask(MaintenanceTask):
             f.write(rv.text)
 
     def perform(self, runner, rules):
-        ignored_packages = rules.get("ignored_packages", ["pkg-resources"])
+        ignored_packages = rules.get("ignored_packages", [])
         list_command = rules['list_command']
         src_file = '/tmp/python-packages.txt'
         dest_file = os.path.join(self.config_dir, 'python-packages.txt')
