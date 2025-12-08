@@ -16,11 +16,11 @@ croniter==6.0.0
     six==1.17.0
   natsort==8.4.0
 pytz==2025.2
-click==8.3.0
+click==8.3.1
 requests==2.32.5
-  certifi==2025.10.5
+  certifi==2025.11.12
   charset-normalizer==3.4.4
-  urllib3==2.5.0
+  urllib3==2.6.0
   idna==3.11
 git+https://github.com/trawick/emptyhammock-out-of-date.git@0.3.1
   # six
