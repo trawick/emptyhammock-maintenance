@@ -3,11 +3,20 @@ from pathlib import Path
 from typing import List, Tuple
 
 
+def _canonicalize_package_name(name: str) -> str:
+    # To support munging of "-" and "_" at installation, convert "_" to "-" in the ignored
+    # package list and when checking an installed package against it.
+    return name.replace("_", "-")
+
+
 def ignore_requirements(
     original_requirements: str,
     edited_requirements: Path,
     ignored_packages: List[str],
 ) -> Tuple[List[str], List[str]]:
+    ignored_packages = [
+        _canonicalize_package_name(ignored) for ignored in ignored_packages
+    ]
     with open(original_requirements, encoding="utf-8") as f:
         original_packages = f.readlines()
     successfully_ignored = set()
@@ -21,7 +30,7 @@ def ignore_requirements(
             all_packages.add(package_spec)
             m = re.match(r"^([^= ]+)([= ]).*", package_spec)
             if m:
-                package_name = m.group(1)
+                package_name = _canonicalize_package_name(m.group(1))
                 if package_name in ignored_packages:
                     successfully_ignored.add(package_name)
                 else:
