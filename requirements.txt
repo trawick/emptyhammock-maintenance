@@ -18,9 +18,9 @@ croniter==6.0.0
 pytz==2025.2
 click==8.3.1
 requests==2.32.5
-  certifi==2025.11.12
+  certifi==2026.1.4
   charset-normalizer==3.4.4
-  urllib3==2.6.0
+  urllib3==2.6.3
   idna==3.11
 git+https://github.com/trawick/emptyhammock-out-of-date.git@0.3.1
   # six
@@ -30,6 +30,6 @@ flake8==7.3.0
   pyflakes==3.4.0
   configparser==7.2.0
   entrypoints==0.4
-  importlib-metadata==8.7.0
+  importlib-metadata==8.7.1
     zipp==3.23.0
     typing-extensions==4.15.0
