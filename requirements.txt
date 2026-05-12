@@ -1,27 +1,27 @@
 # ansible==11 requires Python >= 3.11
 ansible==10.7.0
   ansible-core==2.17.7
-    cryptography==46.0.7
+    cryptography==48.0.0
       cffi==2.0.0
         pycparser==2.23
     Jinja2==3.1.6
       MarkupSafe==3.0.3
-    packaging==25.0
+    packaging==26.2
       pyparsing==3.2.5
     PyYAML==6.0.3
     # ansible-core 2.17.7 doesn't work with resolvelib 1.1.0
     resolvelib==1.0.1
-croniter==6.0.0
+croniter==6.2.2
   python-dateutil==2.9.0
     six==1.17.0
   natsort==8.4.0
 pytz==2025.2
-click==8.3.1
+click==8.3.3
 requests==2.33.0
-  certifi==2026.1.4
-  charset-normalizer==3.4.4
-  urllib3==2.6.3
-  idna==3.11
+  certifi==2026.4.22
+  charset-normalizer==3.4.7
+  urllib3==2.7.0
+  idna==3.14
 git+https://github.com/trawick/emptyhammock-out-of-date.git@0.3.1
   # six
 flake8==7.3.0
